@@ -6,6 +6,10 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
+app.get('/', (req, res) => {
+  res.redirect('/region');
+});
+
 app.use('/coffee', coffeeRouter);
 
 const PORT = process.env.PORT || 3000;
