@@ -1,4 +1,6 @@
-<% for( let index = 0; index < items.length; index++ ) { %> <%
-Object.values(items[index]).forEach(element => { %>
-<p><%= element %></p>
-<% }) %> <% } %>
+<% for( let index = 0; index < items.length; index++ ) { %>
+<a class="item" href="#">
+  <img src="https://picsum.photos/200/300" alt="Placeholder" />
+  <h3><%= items[index].name %></h3>
+</a>
+<% } %>
