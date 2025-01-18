@@ -1,0 +1,14 @@
+<table>
+  <thead>
+    <% for( let index = 0; index < columns.length; index++ ) { %>
+    <th><%= columns[index] %></th>
+    <% } %>
+  </thead>
+  <tbody>
+    <% for( let item of rows ) { %>
+    <tr>
+      <%- include('./partials/item', {item, columns}) %>
+    </tr>
+    <% } %>
+  </tbody>
+</table>

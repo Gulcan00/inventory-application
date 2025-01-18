@@ -1,18 +1,19 @@
 const db = require('../db/queries');
+const tableName = 'coffees';
 
 async function getCoffees(req, res) {
-  const items = await db.getRecords('coffees');
+  const columns = ['name', 'description', 'roast_level', 'price', 'quantity'];
+  const items = await db.getRecords(tableName);
 
-  res.render('index', {
-    title: 'Coffees',
-    active: 'coffee',
-    items,
+  res.render('items-list', {
+    columns,
+    rows: items,
   });
 }
 
 async function getCoffee(req, res) {
   const id = req.params.id;
-  const coffee = await db.getRecord('coffees', id);
+  const coffee = await db.getRecord(tableName, id);
 
   res.render('detail', {
     title: coffee.name,
