@@ -1,7 +1,7 @@
-const db = require('../db/coffeeQueries');
+const db = require('../db/queries');
 
 async function getCoffees(req, res) {
-  const items = await db.getCoffees();
+  const items = await db.getRecords('coffees');
 
   res.render('index', {
     title: 'Coffees',
@@ -12,7 +12,7 @@ async function getCoffees(req, res) {
 
 async function getCoffee(req, res) {
   const id = req.params.id;
-  const coffee = await db.getCoffee(id);
+  const coffee = await db.getRecord('coffees', id);
 
   res.render('detail', {
     title: coffee.name,
