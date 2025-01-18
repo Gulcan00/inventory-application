@@ -22,7 +22,14 @@ async function getCoffee(req, res) {
   });
 }
 
+async function deleteCoffee(req, res) {
+  const id = req.params.id;
+  await db.deleteCoffee(id);
+  res.redirect('/');
+}
+
 module.exports = {
   getCoffees,
   getCoffee,
+  deleteCoffee,
 };

@@ -1,6 +1,11 @@
 const pool = require('./pool');
 
-const TABLES = ['coffees', 'regions', 'flavor_profiles'];
+const TABLES = [
+  'coffees',
+  'regions',
+  'flavor_profiles',
+  'coffee_flavor_profiles',
+];
 
 async function getRecords(tableName) {
   if (!TABLES.includes(tableName)) {
@@ -59,10 +64,40 @@ async function updateCoffee(
   );
 }
 
+async function checkRegionIsInUse(regionId) {
+  const { rows } = await pool.query(
+    'SELECT * FROM coffees WHERE region_id = $1',
+    [regionId]
+  );
+  return rows.length > 0;
+}
+
+async function checkFlavorProfileIsInUse(flavorProfileId) {
+  const { rows } = await pool.query(
+    'SELECT * FROM coffee_flavor_profiles WHERE flavor_profile_id = $1',
+    [flavorProfileId]
+  );
+  return rows.length > 0;
+}
+
+async function deleteCoffee(id) {
+  const { rows } = await pool.query(
+    'SELECT * FROM coffee_flavor_profiles WHERE coffee_id = $1',
+    [id]
+  );
+
+  for (let i = 0; i < rows.length; i++) {
+    await deleteRecord('coffee_flavor_profiles', rows[i].id);
+  }
+
+  await deleteRecord('coffees', id);
+}
+
 module.exports = {
   getRecords,
   getRecord,
   deleteRecord,
   createCoffee,
   updateCoffee,
+  deleteCoffee,
 };
