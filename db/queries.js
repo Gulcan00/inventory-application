@@ -44,23 +44,81 @@ async function deleteRecord(tableName, id) {
 async function createCoffee({
   name,
   description,
-  roast_level,
+  roastLevel,
   price,
   quantity,
+  flavorProfileIds,
 }) {
-  await pool.query(
-    'INSERT INTO COFFEES (name, description, roast_level, price, quantity) VALUES ($1, $2, $3, $4, $5)',
-    [name, description, roast_level, price, quantity]
+  const { rows } = await pool.query(
+    'INSERT INTO coffees (name, description, roast_level, price, quantity) VALUES ($1, $2, $3, $4, $5)',
+    [name, description, roastLevel, price, quantity]
   );
+
+  for (let flavorProfileId of flavorProfileIds) {
+    await pool.query(
+      'INSERT INTO coffee_flavor_profiles (coffee_id, flavor_profile_id) VALUES ($1, $2)',
+      [rows[0].id, flavorProfileId]
+    );
+  }
 }
 
 async function updateCoffee(
   id,
-  { name, description, roast_level, price, quantity }
+  { name, description, roast_level, price, quantity, flavorProfileIds }
 ) {
   await pool.query(
-    'UPDATE COFFEES SET name = $2, description = $3, roast_level = $4, price = $5, quantity = $6 WHERE id = $1',
+    'UPDATE coffees SET name = $2, description = $3, roast_level = $4, price = $5, quantity = $6 WHERE id = $1',
     [id, name, description, roast_level, price, quantity]
+  );
+
+  const { rows: currentFlavorProfiles } = await pool.query(
+    'SELECT * FROM coffee_flavor_profiles WHERE coffee_id = $1',
+    [id]
+  );
+
+  const deleteFlavorProfiles = currentFlavorProfiles.filter(
+    (coffeeFlavorProfile) =>
+      !flavorProfileIds.includes(coffeeFlavorProfile.flavor_profile_id)
+  );
+  await Promise.all(
+    deleteFlavorProfiles.map((coffeeFlavorProfile) =>
+      deleteRecord(
+        'coffee_flavor_profiles',
+        coffeeFlavorProfile.flavor_profile_id
+      )
+    )
+  );
+
+  const coffeeFlavorProfileIds = currentFlavorProfiles.map(
+    (coffeeFlavorProfile) => coffeeFlavorProfile.flavor_profile_id
+  );
+  const addFlavorProfileIds = flavorProfileIds.filter(
+    (flavorProfileId) => !coffeeFlavorProfileIds.includes(flavorProfileId)
+  );
+  await Promise.all(
+    addFlavorProfileIds.map((flavorProfileId) =>
+      createCoffeeFlavorProfile(id, flavorProfileId)
+    )
+  );
+}
+
+async function deleteCoffee(id) {
+  const { rows } = await pool.query(
+    'SELECT * FROM coffee_flavor_profiles WHERE coffee_id = $1',
+    [id]
+  );
+
+  for (let i = 0; i < rows.length; i++) {
+    await deleteRecord('coffee_flavor_profiles', rows[i].id);
+  }
+
+  await deleteRecord('coffees', id);
+}
+
+async function createCoffeeFlavorProfile(coffeeId, flavorProfileId) {
+  await pool.query(
+    'INSERT INTO coffee_flavor_profiles (coffee_id, flavor_profile_id) VALUES ($1, $2)',
+    [coffeeId, flavorProfileId]
   );
 }
 
@@ -78,19 +136,6 @@ async function checkFlavorProfileIsInUse(flavorProfileId) {
     [flavorProfileId]
   );
   return rows.length > 0;
-}
-
-async function deleteCoffee(id) {
-  const { rows } = await pool.query(
-    'SELECT * FROM coffee_flavor_profiles WHERE coffee_id = $1',
-    [id]
-  );
-
-  for (let i = 0; i < rows.length; i++) {
-    await deleteRecord('coffee_flavor_profiles', rows[i].id);
-  }
-
-  await deleteRecord('coffees', id);
 }
 
 module.exports = {
