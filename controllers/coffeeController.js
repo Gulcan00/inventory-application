@@ -28,8 +28,20 @@ async function deleteCoffee(req, res) {
   res.redirect('/');
 }
 
+async function createCoffeePOST(req, res) {
+  const data = req.body;
+  await db.createCoffee(data);
+  res.redirect('/');
+}
+
+async function createCoffeeGET(req, res) {
+  res.render('./forms/coffee-form');
+}
+
 module.exports = {
   getCoffees,
   getCoffee,
   deleteCoffee,
+  createCoffeePOST,
+  createCoffeeGET,
 };
