@@ -6,10 +6,10 @@
     <title><%= title %></title>
   </head>
   <body>
-    <%- include('./partials/navbar', { active }) %>
+    <!-- <%- include('./partials/navbar', { active }) %> -->
     <h1><%= title %></h1>
     <p>Name: <%= item.name %></p>
-    <a href="<%= `/coffee/${item.id}/edit` %>">Edit</a>
-    <a href="<%= `/coffee/${item.id}/delete` %>">Delete</a>
+    <a href="<%= `/${path}/${item.id}/edit` %>">Edit</a>
+    <a href="<%= `/${path}/${item.id}/delete` %>">Delete</a>
   </body>
 </html>
