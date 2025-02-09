@@ -1,3 +1,4 @@
+const { body, validationResult } = require('express-validator');
 const db = require('../db/queries');
 const tableName = 'coffees';
 
@@ -8,6 +9,7 @@ async function getCoffees(req, res) {
   res.render('items-list', {
     columns,
     rows: items,
+    path: 'coffee',
   });
 }
 
@@ -17,7 +19,7 @@ async function getCoffee(req, res) {
 
   res.render('detail', {
     title: coffee.name,
-    active: 'coffee',
+    path: 'coffee',
     item: coffee,
   });
 }
@@ -28,14 +30,46 @@ async function deleteCoffee(req, res) {
   res.redirect('/');
 }
 
-async function createCoffeePOST(req, res) {
-  const data = req.body;
-  await db.createCoffee(data);
-  res.redirect('/');
-}
+const alphaErr = 'must only contain letters.';
+const validateCoffee = [
+  body('name').trim().isAlpha().withMessage(`Name ${alphaErr}`),
+  body('description')
+    .optional({ values: 'falsy' })
+    .isAlpha()
+    .withMessage(`Name ${alphaErr}`),
+  body(''),
+];
+
+const createCoffeePOST = [
+  validateCoffee,
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const regions = await db.getRecords('regions');
+      const flavorProfiles = await db.getRecords('flavor_profiles');
+
+      return res.status(400).render('./forms/coffee-form', {
+        regions,
+        flavorProfiles,
+        errors: errors.array(),
+      });
+    }
+
+    const data = req.body;
+    await db.createCoffee(data);
+    res.redirect('/');
+  },
+];
 
 async function createCoffeeGET(req, res) {
-  res.render('./forms/coffee-form');
+  const regions = await db.getRecords('regions');
+  const flavorProfiles = await db.getRecords('flavor_profiles');
+
+  res.render('./forms/coffee-form', {
+    regions,
+    flavorProfiles,
+  });
 }
 
 module.exports = {
