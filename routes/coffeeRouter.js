@@ -7,6 +7,6 @@ coffeeRouter.get('/', coffeeController.getCoffees);
 coffeeRouter.post('/create', coffeeController.createCoffeePOST);
 coffeeRouter.get('/create', coffeeController.createCoffeeGET);
 coffeeRouter.get('/:id', coffeeController.getCoffee);
-coffeeRouter.get('/:id/delete', coffeeController.deleteCoffee);
+coffeeRouter.post('/:id/delete', coffeeController.deleteCoffee);
 
 module.exports = coffeeRouter;

@@ -6,10 +6,15 @@
     <title><%= title %></title>
   </head>
   <body>
-    <!-- <%- include('./partials/navbar', { active }) %> -->
     <h1><%= title %></h1>
     <p>Name: <%= item.name %></p>
     <a href="<%= `/${path}/${item.id}/edit` %>">Edit</a>
-    <a href="<%= `/${path}/${item.id}/delete` %>">Delete</a>
+    <form
+      action="<%= `/${path}/${item.id}/delete` %>"
+      method="post"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
   </body>
 </html>
