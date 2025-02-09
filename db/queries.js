@@ -50,7 +50,7 @@ async function createCoffee({
   flavorProfileIds,
 }) {
   const { rows } = await pool.query(
-    'INSERT INTO coffees (name, description, roast_level, price, quantity) VALUES ($1, $2, $3, $4, $5)',
+    'INSERT INTO coffees (name, description, roast_level, price, quantity) VALUES ($1, $2, $3, $4, $5) RETURNING id',
     [name, description, roastLevel, price, quantity]
   );
 
@@ -120,6 +120,19 @@ async function createCoffeeFlavorProfile(coffeeId, flavorProfileId) {
     'INSERT INTO coffee_flavor_profiles (coffee_id, flavor_profile_id) VALUES ($1, $2)',
     [coffeeId, flavorProfileId]
   );
+}
+
+async function getCoffeeDetails(coffeeId) {
+  const { rows } = await pool.query(
+    'SELECT * FROM ', //TODO write query to get each coffee and flavor profiles
+    [coffeeId]
+  );
+
+  if (rows.length > 0) {
+    return rows[0];
+  }
+
+  return null;
 }
 
 async function checkRegionIsInUse(regionId) {
