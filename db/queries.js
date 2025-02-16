@@ -90,9 +90,11 @@ async function updateCoffee(
     )
   );
 
-  const currentFlavorProfileIds = new Set(currentFlavorProfiles.map(
-    (coffeeFlavorProfile) => coffeeFlavorProfile.flavor_profile_id
-  ));
+  const currentFlavorProfileIds = new Set(
+    currentFlavorProfiles.map(
+      (coffeeFlavorProfile) => coffeeFlavorProfile.flavor_profile_id
+    )
+  );
   const addFlavorProfileIds = flavorProfileIds.filter(
     (flavorProfileId) => !currentFlavorProfileIds.has(flavorProfileId)
   );
@@ -104,10 +106,9 @@ async function updateCoffee(
 }
 
 async function deleteCoffee(id) {
-  await pool.query(
-    'DELETE FROM coffee_flavor_profiles WHERE coffee_id = $1',
-    [id]
-  );
+  await pool.query('DELETE FROM coffee_flavor_profiles WHERE coffee_id = $1', [
+    id,
+  ]);
 
   await deleteRecord('coffees', id);
 }
@@ -121,15 +122,11 @@ async function createCoffeeFlavorProfile(coffeeId, flavorProfileId) {
 
 async function getCoffeeFlavorProfiles(coffeeId) {
   const { rows } = await pool.query(
-    'SELECT fp.id, fp.name FROM flavor_profiles fp JOIN coffee_flavor_profiles cfp ON fp.id = cfp.flavor_profile_id WHERE cfp.coffee_id = $1', 
+    'SELECT fp.id, fp.name FROM flavor_profiles fp JOIN coffee_flavor_profiles cfp ON fp.id = cfp.flavor_profile_id WHERE cfp.coffee_id = $1',
     [coffeeId]
   );
 
-  if (rows.length > 0) {
-    return rows[0];
-  }
-
-  return null;
+  return rows;
 }
 
 async function checkRegionIsInUse(regionId) {
@@ -155,5 +152,5 @@ module.exports = {
   createCoffee,
   updateCoffee,
   deleteCoffee,
-  getCoffeeFlavorProfiles
+  getCoffeeFlavorProfiles,
 };
