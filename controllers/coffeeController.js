@@ -16,6 +16,9 @@ async function getCoffees(req, res) {
 async function getCoffee(req, res) {
   const id = req.params.id;
   const coffee = await db.getRecord(tableName, id);
+  const region = await db.getRecord('regions', coffee.region_id);
+  coffee.region = region.name;
+  coffee.flavorProfiles = await db.getCoffeeFlavorProfiles(id);
 
   res.render('detail', {
     title: coffee.name,

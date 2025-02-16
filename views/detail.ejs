@@ -8,6 +8,8 @@
   <body>
     <h1><%= title %></h1>
     <p>Name: <%= item.name %></p>
+    <% if (path == 'coffee') { %> <%- include('./partials/coffee-detail', {
+    coffee: item }) %> <% } %>
     <a href="<%= `/${path}/${item.id}/edit` %>">Edit</a>
     <form
       action="<%= `/${path}/${item.id}/delete` %>"

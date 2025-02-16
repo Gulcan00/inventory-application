@@ -1,0 +1,12 @@
+<ul>
+  <li>Description: <%= coffee.description%></li>
+  <li>Roast Level: <%= coffee.roastLevel%></li>
+  <li>Region: <%= coffee.region%></li>
+  <li>
+    Flavor Profiles: <% coffee.flavorProfiles.forEach(flavorProfile => { %>
+    <p><%= flavorProfile.name %></p>
+    <% }) %>
+  </li>
+  <li>Quantity: <%= coffee.quantity%></li>
+  <li>Price: <%= coffee.price%></li>
+</ul>
