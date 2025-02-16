@@ -40,7 +40,12 @@ const validateCoffee = [
     .optional({ values: 'falsy' })
     .isAlpha()
     .withMessage(`Name ${alphaErr}`),
-  body(''),
+  body('price')
+    .isCurrency({ allow_negatives: false })
+    .withMessage('Invalid currency'),
+  body('quantity')
+    .isLength({ min: 0 })
+    .withMessage('Quantity cannot be negative'),
 ];
 
 const createCoffeePOST = [
@@ -51,11 +56,16 @@ const createCoffeePOST = [
     if (!errors.isEmpty()) {
       const regions = await db.getRecords('regions');
       const flavorProfiles = await db.getRecords('flavor_profiles');
+      const errorMessages = errors.array().reduce((obj, err) => {
+        const name = err.path;
+        obj[name] = err.msg;
+        return obj;
+      }, {});
 
       return res.status(400).render('./forms/coffee-form', {
         regions,
         flavorProfiles,
-        errors: errors.array(),
+        errors: errorMessages,
       });
     }
 
