@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+const { param, body, validationResult } = require('express-validator');
 const db = require('../db/queries');
 const tableName = 'coffees';
 
@@ -13,20 +13,38 @@ async function getCoffees(req, res) {
   });
 }
 
-async function getCoffee(req, res) {
-  const id = req.params.id;
-  const coffee = await db.getRecord(tableName, id);
-  coffee.roastLevel = coffee.roast_level;
-  const region = await db.getRecord('regions', coffee.region_id);
-  coffee.region = region.name;
-  coffee.flavorProfiles = await db.getCoffeeFlavorProfiles(id);
+const getCoffee = [
+  param('id').isNumeric(),
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  res.render('detail', {
-    title: coffee.name,
-    path: 'coffee',
-    item: coffee,
-  });
-}
+    if (!errors.isEmpty()) {
+      res.status(400).render('error', {
+        error: 'Invalid id for coffee',
+      });
+    }
+
+    const id = req.params.id;
+    const coffee = await db.getRecord(tableName, id);
+
+    if (!coffee) {
+      res.status(404).render('error', {
+        error: `Coffee with id ${id} does not exist`,
+      });
+    }
+
+    coffee.roastLevel = coffee.roast_level;
+    const region = await db.getRecord('regions', coffee.region_id);
+    coffee.region = region.name;
+    coffee.flavorProfiles = await db.getCoffeeFlavorProfiles(id);
+
+    res.render('detail', {
+      title: coffee.name,
+      path: 'coffee',
+      item: coffee,
+    });
+  },
+];
 
 async function deleteCoffee(req, res) {
   const id = req.params.id;
@@ -87,7 +105,7 @@ async function createCoffeeGET(req, res) {
   const flavorProfiles = await db.getRecords('flavor_profiles');
 
   if (id) {
-    const coffee = await db.getRecord('coffees', id);
+    const coffee = await db.getRecord(tableName, id);
     coffee.flavor_profiles = await db.getCoffeeFlavorProfiles(id);
     res.render('./forms/coffee-form', {
       regions,
@@ -110,7 +128,7 @@ const updateCoffee = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      const coffee = await db.getRecord('coffees', id);
+      const coffee = await db.getRecord(tableName, id);
       coffee.flavor_profiles = await db.getCoffeeFlavorProfiles(id);
       const regions = await db.getRecords('regions');
       const flavorProfiles = await db.getRecords('flavor_profiles');

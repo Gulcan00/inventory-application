@@ -19,11 +19,20 @@ const getRegion = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      // TODO return 404 page
+      res.status(400).render('error', {
+        error: 'Invalid id for region',
+      });
     }
 
     const id = req.params.id;
     const region = await db.getRecord(tableName, id);
+
+    if (!region) {
+      res.status(404).render('error', {
+        error: `Region with id ${id} does not exist`,
+      });
+    }
+
     res.render('detail', {
       title: region.name,
       path: 'region',
@@ -101,13 +110,17 @@ const deleteRegion = [
   async (req, res, next) => {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty) {
-      //404
+    if (!errors.isEmpty()) {
+      res.render('error', {
+        error: 'Invalid id for region',
+      });
     }
 
     const id = req.params.id;
     if (await db.checkRegionIsInUse(id)) {
-      return getRegion();
+      res.status(405).render('error', {
+        error: 'Region is used by coffees',
+      });
     } else {
       next();
     }

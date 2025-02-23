@@ -16,6 +16,11 @@ app.get('/', (req, res) => {
 app.use('/coffee', coffeeRouter);
 app.use('/region', regionRouter);
 app.use('/flavor-profile', flavorProfileRouter);
+app.use('*', (req, res) => {
+  res.render('error', {
+    error: 'This page does not exist.'
+  })
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -2,16 +2,18 @@ const { param, body, validationResult } = require('express-validator');
 const db = require('../db/queries');
 const tableName = 'flavor_profiles';
 
-async function getFlavorProfiles(req, res) {
-  const columns = ['name'];
-  const items = await db.getRecords(tableName);
+const getFlavorProfiles = [
+  async (req, res) => {
+    const columns = ['name'];
+    const items = await db.getRecords(tableName);
 
-  res.render('items-list', {
-    columns,
-    rows: items,
-    path: 'flavor-profile',
-  });
-}
+    res.render('items-list', {
+      columns,
+      rows: items,
+      path: 'flavor-profile',
+    });
+  },
+];
 
 const getFlavorProfile = [
   param('id').isNumeric(),
@@ -19,14 +21,18 @@ const getFlavorProfile = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      // TODO return 404 page
+      res.status(400).render('error', {
+        error: 'Invalid id for flavor profile',
+      });
     }
 
     const id = req.params.id;
     const flavorProfile = await db.getRecord(tableName, id);
 
     if (!flavorProfile) {
-      return res.status(404).send('Flavor profile not found');
+      res.status(404).render('error', {
+        error: `Flavor profile with id ${id} does not exist`,
+      });
     }
 
     res.render('detail', {
@@ -106,13 +112,17 @@ const deleteFlavorProfile = [
   async (req, res, next) => {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty) {
-      //404
+    if (!errors.isEmpty()) {
+      res.render('error', {
+        error: 'Invalid id for flavor profile',
+      });
     }
 
     const id = req.params.id;
     if (await db.checkFlavorProfileIsInUse(id)) {
-      res.redirect('/flavor-profile/' + id);
+      res.status(405).render('error', {
+        error: 'Flavor profile is used by coffees',
+      });
     } else {
       next();
     }
