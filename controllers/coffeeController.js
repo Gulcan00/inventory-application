@@ -16,6 +16,7 @@ async function getCoffees(req, res) {
 async function getCoffee(req, res) {
   const id = req.params.id;
   const coffee = await db.getRecord(tableName, id);
+  coffee.roastLevel = coffee.roast_level;
   const region = await db.getRecord('regions', coffee.region_id);
   coffee.region = region.name;
   coffee.flavorProfiles = await db.getCoffeeFlavorProfiles(id);
@@ -35,17 +36,21 @@ async function deleteCoffee(req, res) {
 
 const alphaErr = 'must only contain letters.';
 const validateCoffee = [
-  body('name').trim().isAlpha().withMessage(`Name ${alphaErr}`),
+  body('name')
+    .trim()
+    .isAlpha('en-US', { ignore: ' ' })
+    .withMessage(`Name ${alphaErr}`),
   body('description')
     .optional({ values: 'falsy' })
-    .isAlpha()
-    .withMessage(`Name ${alphaErr}`),
+    .isAlpha('en-US', { ignore: ' ' })
+    .withMessage(`Description ${alphaErr}`),
   body('price')
     .isCurrency({ allow_negatives: false })
     .withMessage('Invalid currency'),
   body('quantity')
     .isLength({ min: 0 })
     .withMessage('Quantity cannot be negative'),
+  body('flavorProfileIds').toArray(),
 ];
 
 const createCoffeePOST = [
@@ -66,6 +71,7 @@ const createCoffeePOST = [
         regions,
         flavorProfiles,
         errors: errorMessages,
+        coffee: {},
       });
     }
 
@@ -76,14 +82,58 @@ const createCoffeePOST = [
 ];
 
 async function createCoffeeGET(req, res) {
+  const id = req.params.id;
   const regions = await db.getRecords('regions');
   const flavorProfiles = await db.getRecords('flavor_profiles');
 
-  res.render('./forms/coffee-form', {
-    regions,
-    flavorProfiles,
-  });
+  if (id) {
+    const coffee = await db.getRecord('coffees', id);
+    coffee.flavor_profiles = await db.getCoffeeFlavorProfiles(id);
+    res.render('./forms/coffee-form', {
+      regions,
+      flavorProfiles,
+      coffee,
+    });
+  } else {
+    res.render('./forms/coffee-form', {
+      regions,
+      flavorProfiles,
+      coffee: {},
+    });
+  }
 }
+
+const updateCoffee = [
+  validateCoffee,
+  async (req, res) => {
+    const id = req.params.id;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const coffee = await db.getRecord('coffees', id);
+      coffee.flavor_profiles = await db.getCoffeeFlavorProfiles(id);
+      const regions = await db.getRecords('regions');
+      const flavorProfiles = await db.getRecords('flavor_profiles');
+      const errorMessages = errors.array().reduce((obj, err) => {
+        const name = err.path;
+        obj[name] = err.msg;
+        return obj;
+      }, {});
+
+      return res.status(400).render('./forms/coffee-form', {
+        regions,
+        flavorProfiles,
+        errors: errorMessages,
+        coffee,
+      });
+    }
+
+    const data = req.body;
+
+    await db.updateCoffee(id, data);
+    res.redirect('/');
+  },
+];
 
 module.exports = {
   getCoffees,
@@ -91,4 +141,5 @@ module.exports = {
   deleteCoffee,
   createCoffeePOST,
   createCoffeeGET,
+  updateCoffee,
 };
