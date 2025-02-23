@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create <%= path %></title>
+</head>
+<body>
+    <form action=<%= (data.id) ? `/${path}/${data.id}/edit` :  `/${path}/create` %> method="POST">
+        <div>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required value="<%= data?.name %>"/>
+        </div>
+
+        <div>
+            <button type="submit">Submit</button>
+            <a href=<%= "/" + path %>>Cancel</a>
+        </div>
+    </form>
+</body>
+</html>

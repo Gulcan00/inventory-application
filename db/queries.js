@@ -149,12 +149,34 @@ async function checkFlavorProfileIsInUse(flavorProfileId) {
   return rows.length > 0;
 }
 
+async function createRecord(tableName, name) {
+  if (!TABLES.includes(tableName)) {
+    return;
+  }
+
+  await pool.query(`INSERT INTO ${tableName} (name) VALUES ($1)`, [name]);
+}
+
+async function updateRecord(tableName, { id, name }) {
+  if (!TABLES.includes(tableName)) {
+    return;
+  }
+
+  await pool.query(`UPDATE ${tableName} SET name = $1 WHERE id = $2`, [
+    name,
+    id,
+  ]);
+}
+
 module.exports = {
   getRecords,
   getRecord,
-  deleteRecord,
   createCoffee,
   updateCoffee,
   deleteCoffee,
   getCoffeeFlavorProfiles,
+  createRecord,
+  deleteRecord,
+  checkRegionIsInUse,
+  updateRecord,
 };
