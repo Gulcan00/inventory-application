@@ -179,4 +179,5 @@ module.exports = {
   deleteRecord,
   checkRegionIsInUse,
   updateRecord,
+  checkFlavorProfileIsInUse,
 };
