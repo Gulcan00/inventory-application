@@ -77,32 +77,36 @@ async function updateCoffee(
     [id]
   );
 
-  const deleteFlavorProfiles = currentFlavorProfiles.filter(
+  const deleteFlavorProfiles = currentFlavorProfiles?.filter(
     (coffeeFlavorProfile) =>
-      !flavorProfileIds.includes(coffeeFlavorProfile.flavor_profile_id)
+      !flavorProfileIds?.includes(coffeeFlavorProfile.flavor_profile_id)
   );
-  await Promise.all(
-    deleteFlavorProfiles.map((coffeeFlavorProfile) =>
-      deleteRecord(
-        'coffee_flavor_profiles',
-        coffeeFlavorProfile.flavor_profile_id
+  if (deleteFlavorProfiles) {
+    await Promise.all(
+      deleteFlavorProfiles.map((coffeeFlavorProfile) =>
+        deleteRecord(
+          'coffee_flavor_profiles',
+          coffeeFlavorProfile.flavor_profile_id
+        )
       )
-    )
-  );
+    );
+  }
 
   const currentFlavorProfileIds = new Set(
-    currentFlavorProfiles.map(
+    currentFlavorProfiles?.map(
       (coffeeFlavorProfile) => coffeeFlavorProfile.flavor_profile_id
     )
   );
-  const addFlavorProfileIds = flavorProfileIds.filter(
+  const addFlavorProfileIds = flavorProfileIds?.filter(
     (flavorProfileId) => !currentFlavorProfileIds.has(flavorProfileId)
   );
-  await Promise.all(
-    addFlavorProfileIds.map((flavorProfileId) =>
-      createCoffeeFlavorProfile(id, flavorProfileId)
-    )
-  );
+  if (addFlavorProfileIds) {
+    await Promise.all(
+      addFlavorProfileIds.map((flavorProfileId) =>
+        createCoffeeFlavorProfile(id, flavorProfileId)
+      )
+    );
+  }
 }
 
 async function deleteCoffee(id) {
