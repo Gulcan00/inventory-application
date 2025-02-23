@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const coffeeRouter = require('./routes/coffeeRouter');
 const regionRouter = require('./routes/regionRouter');
 const flavorProfileRouter = require('./routes/flavorProfileRouter');
@@ -8,6 +9,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.redirect('/coffee');
@@ -18,8 +20,8 @@ app.use('/region', regionRouter);
 app.use('/flavor-profile', flavorProfileRouter);
 app.use('*', (req, res) => {
   res.render('error', {
-    error: 'This page does not exist.'
-  })
+    error: 'This page does not exist.',
+  });
 });
 
 const PORT = process.env.PORT || 3000;

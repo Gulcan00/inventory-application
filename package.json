@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node --watch app.js",
     "populateDb": "node db/populatedb.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "postcss src/styles/styles.css -o public/styles/styles.css",
+    "watch:css": "postcss src/styles/styles.css -o public/styles/styles.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +19,12 @@
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
     "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.8",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^4.0.8"
   }
 }
