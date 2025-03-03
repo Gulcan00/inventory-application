@@ -1,15 +1,37 @@
-<a href="<%= `${path}/create` %>">New</a>
-<table>
-  <thead>
-    <% for( let index = 0; index < columns.length; index++ ) { %>
-    <th><%= columns[index] %></th>
-    <% } %>
-  </thead>
-  <tbody>
-    <% for( let item of rows ) { %>
-    <tr>
-      <%- include('./partials/item', {item, columns}) %>
-    </tr>
-    <% } %>
-  </tbody>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= path %></title>
+    <link rel="stylesheet" href="/styles/styles.css" />
+  </head>
+  <body class="bg-linear-to-b from-[var(--coffee)] to-[var(--ecru)]">
+    <div class="grid grid-cols-1 gap-4 p-4">
+      <div>
+        <a href="<%= `${path}/create` %>" class="btn btn-primary">New</a>
+      </div>
+      <div>
+        <table class="bg-[var(--cream)] text-left border-collapse">
+          <thead class="border-b-2 border-b-[var(--black-coffee)]">
+            <% for( let index = 0; index < columns.length; index++ ) { %>
+            <th class="text-[var(--black-coffee)] text-sm capitalize p-2">
+              <%= columns[index] %>
+            </th>
+            <% } %>
+          </thead>
+          <tbody>
+            <% for( let item of rows ) { %>
+            <tr
+              class="border-b-1 border-b-[var(--black-coffee)] hover:bg-amber-200 cursor-pointer"
+              onclick="window.location.href = '<%=`/${path}/${item.id}`%>'"
+            >
+              <%- include('./partials/item', {item, columns}) %>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
