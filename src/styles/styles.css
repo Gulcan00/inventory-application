@@ -1,1 +1,37 @@
 @import 'tailwindcss';
+
+:root {
+  --black-coffee: #3b2a2a;
+  --coffee: #6f4c3e;
+  --ecru: #c2b280;
+  --cream: #e8d8b0;
+  --gray: #f5f5f0;
+}
+
+html {
+  @apply h-full;
+}
+
+body {
+  @apply font-sans h-full;
+}
+
+.label {
+  @apply block text-sm/6 font-medium text-gray-900;
+}
+
+.form-field {
+  @apply block w-full rounded-md bg-white grow py-1.5 px-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-amber-600 sm:text-sm/6 font-inherit;
+}
+
+.btn {
+  @apply rounded-md px-2 py-1.5 uppercase font-semibold cursor-pointer text-sm;
+}
+
+.btn-primary {
+  @apply bg-amber-600 hover:bg-amber-700 text-white shadow-sm;
+}
+
+.btn-secondary {
+  @apply border-amber-600 hover:bg-amber-200 text-amber-800 hover:shadow-sm;
+}
