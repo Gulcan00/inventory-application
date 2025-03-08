@@ -392,7 +392,7 @@ body::before {
   width: 100%;
   flex-grow: 1;
   border-radius: var(--radius-md);
-  background-color: var(--color-white);
+  background-color: var(--color-amber-50);
   padding-inline: calc(var(--spacing) * 3);
   padding-block: calc(var(--spacing) * 1.5);
   font-size: var(--text-base);
