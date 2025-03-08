@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="flex justify-center">
-        <form class="bg-amber-50 shadow-lg rounded-md p-6 min-w-md flex flex-col gap-3 bg-pattern relative" action=<%= (data.id) ? `/${path}/${data.id}/edit` :  `/${path}/create` %> method="POST">
+        <form class="bg-amber-50 shadow-lg rounded-md p-6 md:min-w-md flex flex-col gap-3 bg-pattern relative" action=<%= (data.id) ? `/${path}/${data.id}/edit` :  `/${path}/create` %> method="POST">
             <div class="mt-8">
                 <label for="name" class="label">Name</label>
                 <input class="form-field mt-2" type="text" id="name" name="name" required value="<%= data?.name %>"/>

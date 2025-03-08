@@ -121,7 +121,9 @@ const deleteFlavorProfile = [
     const id = req.params.id;
     if (await db.checkFlavorProfileIsInUse(id)) {
       res.status(405).render('error', {
-        error: 'Flavor profile is used by coffees',
+        error:
+          'This flavor profile is currently assigned to one or more coffees. To delete it, please reassign those coffees to a different flavor profile.',
+        code: 405,
       });
     } else {
       next();

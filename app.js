@@ -21,6 +21,7 @@ app.use('/flavor-profile', flavorProfileRouter);
 app.use('*', (req, res) => {
   res.render('error', {
     error: 'This page does not exist.',
+    code: 404,
   });
 });
 

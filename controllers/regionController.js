@@ -119,7 +119,9 @@ const deleteRegion = [
     const id = req.params.id;
     if (await db.checkRegionIsInUse(id)) {
       res.status(405).render('error', {
-        error: 'Region is used by coffees',
+        error:
+          'This region is currently assigned to one or more coffees. To delete it, please reassign those coffees to a different region.',
+        code: 405,
       });
     } else {
       next();
