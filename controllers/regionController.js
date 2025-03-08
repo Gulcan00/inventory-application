@@ -52,7 +52,7 @@ const createRegionPOST = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      const errorMsg = errors[0].msg;
+      const errorMsg = errors.array()[0].msg;
       return res.status(400).render('./forms/form', {
         path: 'region',
         error: errorMsg,

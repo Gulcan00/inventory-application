@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Coffee</title>
     <link rel="stylesheet" href="/styles/styles.css">
+    <link rel="shortcut icon" href="/coffee.svg" type="image/x-icon" />
   </head>
   <body>
     <div class="flex justify-center">
       <form
         action=<%= (coffee.id) ? "/coffee/" + coffee.id + "/edit" : "/coffee/create" %>
         method="POST"
-        class="mt-[15vh] bg-amber-50 p-6 min-w-md rounded-md shadow-lg flex flex-col gap-3"
+        class="bg-amber-50 p-6 min-w-md rounded-md shadow-lg flex flex-col gap-4 bg-pattern relative"
       >
-        <div>
+        <div class="mt-8">
           <label class="label" for="name">Name</label>
           <div class="mt-2">
             <input
@@ -26,7 +27,10 @@
             />
           </div>
           <% if (locals.errors && errors.name) { %>
-          <p><%= errors.name %></p>
+            <p class="text-red-700 flex gap-2 items-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 stoke-2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+            </svg>
+            <%= errors.name %></p>
           <% } %>
         </div>
         <div>
@@ -41,12 +45,15 @@
             />
           </div>
           <% if (locals.errors && errors.description) { %>
-          <p><%= errors.description%></p>
+            <p class="text-red-700 flex gap-2 items-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 stoke-2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+            </svg>
+            <%= errors.description %></p>
           <% } %>
         </div>
         <div>
           <label for="roastLevel" class="label">Roast Level</label>
-          <select name="roastLevel" id="roastLevel" required class="form-field">
+          <select name="roastLevel" id="roastLevel" required class="form-field mt-2">
             <option value="1" <%= coffee.roast_level == 1 ? "selected" : "" %>>1</option>
             <option value="2" <%= coffee.roast_level == 2 ? "selected" : "" %>>2</option>
             <option value="3" <%= coffee.roast_level == 3 ? "selected" : "" %>>3</option>
@@ -56,7 +63,7 @@
         </div>
         <div>
           <label for="region" class="label">Region</label>
-          <select name="regionId" id="region" required class="form-field">
+          <select name="regionId" id="region" required class="form-field mt-2">
             <% for( let region of regions) { %>
             <option value="<%= region.id %>" <%= coffee.region_id == region.id ? "selected" : "" %>><%= region.name %></option>
             <% } %>
@@ -64,7 +71,7 @@
         </div>
         <div>
           <label for="flavorProfile" class="label">Flavor Profile</label>
-          <select name="flavorProfileIds" id="flavorProfile" multiple>
+          <select name="flavorProfileIds" id="flavorProfile" multiple class="mt-2">
             <% for( let flavorProfile of flavorProfiles) { %>
             <option value="<%= flavorProfile.id %>" <%= coffee.flavor_profiles?.some(fp => fp.id == flavorProfile.id) ? "selected" : "" %>>
               <%= flavorProfile.name %>
