@@ -4,33 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= path %></title>
-    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
   </head>
-  <body class="bg-linear-to-b from-[var(--coffee)] to-[var(--ecru)]">
-    <div class="grid grid-cols-1 gap-4 p-4">
-      <div>
-        <a href="<%= `${path}/create` %>" class="btn btn-primary">New</a>
-      </div>
-      <div>
-        <table class="bg-[var(--cream)] text-left border-collapse">
-          <thead class="border-b-2 border-b-[var(--black-coffee)]">
-            <% for( let index = 0; index < columns.length; index++ ) { %>
-            <th class="text-[var(--black-coffee)] text-sm capitalize p-2">
-              <%= columns[index] %>
-            </th>
-            <% } %>
-          </thead>
-          <tbody>
-            <% for( let item of rows ) { %>
-            <tr
-              class="border-b-1 border-b-[var(--black-coffee)] hover:bg-amber-200 cursor-pointer"
-              onclick="window.location.href = '<%=`/${path}/${item.id}`%>'"
+  <body>
+    <div class="flex justify-center">
+      <div
+        class="mt-[15vh] grid grid-cols-1 p-8 gap-6 min-w-xs bg-amber-50 shadow-lg rounded-md"
+      >
+        <div class="grid grid-cols-2 gap-8 items-center justify-items-stretch">
+          <h1 class="text-lg font-bold text-stone-700 capitalize">
+            <%= path %>
+          </h1>
+          <div class="justify-self-end">
+            <a href="<%= `${path}/create` %>" class="btn btn-primary">New</a>
+          </div>
+        </div>
+        <ul role="list">
+          <% for (let item of rows) { %>
+          <li>
+            <a
+              href="<%=`/${path}/${item.id}`%>"
+              class="block py-4 border-b-2 border-b-orange-200 hover:text-yellow-900 hover:font-bold hover:underline hover:decoration-yellow-900 hover:decoration-2"
+              ><%= item.name %></a
             >
-              <%- include('./partials/item', {item, columns}) %>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
+          </li>
+          <% } %>
+        </ul>
       </div>
     </div>
   </body>
