@@ -4,19 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="shortcut icon" href="/coffee.svg" type="image/x-icon" />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Name: <%= item.name %></p>
-    <% if (path == 'coffee') { %> <%- include('./partials/coffee-detail', {
-    coffee: item }) %> <% } %>
-    <a href="<%= `/${path}/${item.id}/edit` %>">Edit</a>
-    <form
-      action="<%= `/${path}/${item.id}/delete` %>"
-      method="post"
-      style="display: inline"
-    >
-      <button type="submit">Delete</button>
-    </form>
+    <div class="flex flex-col items-center">
+      <a
+        href="/<%= path %>"
+        class="flex gap-2 items-center text-sm uppercase text-stone-600 font-bold tracking-wider self-start px-4 hover:underline hover:decoration-2"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+          /></svg
+        >go back</a
+      >
+      <div
+        class="bg-amber-50 p-6 md:min-w-md rounded-md shadow-lg flex flex-col gap-4 bg-pattern relative"
+      >
+        <h1 class="mt-8 font-bold"><%= item.name %></h1>
+        <% if (path == 'coffee') { %> <%- include('./partials/coffee-detail', {
+        coffee: item }) %> <% } %>
+        <div class="self-end flex items-center gap-4">
+          <a href="<%= `/${path}/${item.id}/edit` %>" class="btn btn-primary"
+            >Edit</a
+          >
+          <form
+            action="<%= `/${path}/${item.id}/delete` %>"
+            method="post"
+            style="display: inline"
+          >
+            <button type="submit" class="btn btn-secondary">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

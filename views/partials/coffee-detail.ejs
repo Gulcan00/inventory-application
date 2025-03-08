@@ -1,12 +1,47 @@
-<ul>
-  <li>Description: <%= coffee.description%></li>
-  <li>Roast Level: <%= coffee.roastLevel%></li>
-  <li>Region: <%= coffee.region%></li>
-  <li>
-    Flavor Profiles: <% coffee.flavorProfiles.forEach(flavorProfile => { %>
-    <p><%= flavorProfile.name %></p>
+<p class="text-stone-600 text-sm -mt-4"><%= coffee.description%></p>
+<p>
+  <span class="text-stone-600 text-sm">Roast Level:</span> <%=
+  coffee.roastLevel%>
+</p>
+<div class="flex justify-between w-full">
+  <p class="text-xl font-semibold text-orange-900">€<%= coffee.price%></p>
+  <p class="self-end text-orange-800"><%= coffee.quantity%> left in stock</p>
+</div>
+<p>
+  <a
+    class="flex items-center gap-2 hover:text-orange-800"
+    href="<%= `/region/${coffee.region_id}` %>"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="#57534d"
+      class="size-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 0 1-1.161.886l-.143.048a1.107 1.107 0 0 0-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 0 1-1.652.928l-.679-.906a1.125 1.125 0 0 0-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 0 0-8.862 12.872M12.75 3.031a9 9 0 0 1 6.69 14.036m0 0-.177-.529A2.25 2.25 0 0 0 17.128 15H16.5l-.324-.324a1.453 1.453 0 0 0-2.328.377l-.036.073a1.586 1.586 0 0 1-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.08.474.49.821.97.821.846 0 1.598.542 1.865 1.345l.215.643m5.276-3.67a9.012 9.012 0 0 1-5.276 3.67m0 0a9 9 0 0 1-10.275-4.835M15.75 9c0 .896-.393 1.7-1.016 2.25"
+      />
+    </svg>
+    <span
+      class="underline underline-offset-2 decoration-dashed decoration-2 decoration-orange-800"
+      ><%= coffee.region%></span
+    >
+  </a>
+</p>
+<div>
+  <p class="text-stone-600 text-sm">Flavor Profiles:</p>
+  <div class="flex gap-2 mt-2">
+    <% coffee.flavorProfiles.forEach(flavorProfile => { %>
+    <a href="<%= `/flavor-profile/${flavorProfile.id}` %>">
+      <span
+        class="grow-0 inline-flex items-center rounded-md bg-yellow-100 px-2 py-1 text-xs font-medium text-stone-700 hover:bg-orange-950 hover:text-yellow-50"
+        ><%= flavorProfile.name %></span
+      >
+    </a>
     <% }) %>
-  </li>
-  <li>Quantity: <%= coffee.quantity%></li>
-  <li>Price: <%= coffee.price%></li>
-</ul>
+  </div>
+</div>
