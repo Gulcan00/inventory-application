@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="flex justify-center">
-        <form class="bg-amber-50 shadow-lg rounded-md p-6 md:min-w-md flex flex-col gap-3 bg-pattern relative" action=<%= (data.id) ? `/${path}/${data.id}/edit` :  `/${path}/create` %> method="POST">
+        <form class="bg-amber-50 shadow-lg rounded-md p-6 md:min-w-md flex flex-col gap-3 bg-pattern relative" action=<%= (data.id) ? `/${path}/${data.id}/edit` :  `/${path}/create` %> method="POST" onsubmit="validateUser(this, event)">
             <div class="mt-8">
                 <label for="name" class="label">Name</label>
                 <input class="form-field mt-2" type="text" id="name" name="name" required value="<%= data?.name %>"/>
@@ -26,5 +26,28 @@
             </div>
         </form>
     </div>
+    <script>
+        function validateUser(form, event) {
+          event.preventDefault();
+          const password = window.prompt('Enter admin password: ');
+          const data = { password };
+          const formBody = new URLSearchParams(data).toString();
+          fetch('/validate-user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formBody,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.isAdmin) {
+                form.submit();
+              } else {
+                window.alert('You do not have access');
+              }
+            });
+        }
+      </script>
 </body>
 </html>
